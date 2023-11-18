@@ -12,10 +12,7 @@ import AppHeader from "./layouts/AppHeader.vue";
 
 <style lang="scss">
 @import "@/assets/scss/app.scss";
-body {
-  justify-content: center;
-  align-items: center;
-}
+
 .main__wrapper {
   padding-bottom: 30px;
 

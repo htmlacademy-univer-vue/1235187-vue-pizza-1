@@ -1,26 +1,25 @@
 <template>
-    <header class="header">
-        <div class="header__logo">
-            <a href="index.html" class="logo">
-                <img 
-                  src="@/assets/img/logo.svg" 
-                  alt="V!U!E! Pizza logo" 
-                  width="90" 
-                  height="40"
-                  />
-            </a>
-        </div>
-        <div class="header__cart">
-            <a href="cart.html">0 ₽</a>
-        </div>
-        <div class="header__user">
-            <a href="#" class="header__login"><span>Войти</span></a>
-        </div>
-    </header>
+  <header class="header">
+    <div class="header__logo">
+      <a href="index.html" class="logo">
+        <img
+          src="@/assets/img/logo.svg"
+          alt="V!U!E! Pizza logo"
+          width="90"
+          height="40"
+        />
+      </a>
+    </div>
+    <div class="header__cart">
+      <a href="cart.html">0 ₽</a>
+    </div>
+    <div class="header__user">
+      <a href="#" class="header__login"><span>Войти</span></a>
+    </div>
+  </header>
 </template>
 
 <style lang="scss" scoped>
-
 @import "@/assets/scss/app.scss";
 
 .header {
@@ -137,14 +136,13 @@
     height: 32px;
     margin-right: 8px;
 
-    content: '';
+    content: "";
     vertical-align: middle;
 
     background: url(../img/login.svg) no-repeat center;
     background-size: auto 50%;
   }
 }
-
 
 .header__login {
   &::after {
@@ -154,7 +152,7 @@
     height: 32px;
     margin-left: 8px;
 
-    content: '';
+    content: "";
     vertical-align: middle;
 
     background: url(../img/login.svg) no-repeat center;

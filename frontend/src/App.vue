@@ -1,7 +1,7 @@
 <template>
-    <AppHeader></AppHeader>
-    <AppLayout></AppLayout>
-    <HomeView></HomeView>
+  <AppHeader></AppHeader>
+  <AppLayout></AppLayout>
+  <HomeView></HomeView>
 </template>
 
 <script setup>
@@ -54,5 +54,4 @@ import AppHeader from "./layouts/AppHeader.vue";
     margin: 0 auto;
   }
 }
-
 </style>

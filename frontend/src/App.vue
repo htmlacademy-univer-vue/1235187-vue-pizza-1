@@ -5,7 +5,7 @@
 </template>
 
 <script setup>
-import { AppLayout } from "@/layouts";
+//import { AppLayout } from "@/layouts";
 import { HomeView } from "@/views";
 import AppHeader from "./layouts/AppHeader.vue";
 </script>

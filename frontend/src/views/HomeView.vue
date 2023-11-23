@@ -102,7 +102,7 @@
                         type="text"
                         name="counter"
                         class="counter__input"
-                        value="0"
+                        v-model.number="count"
                       />
                       <button
                         type="button"

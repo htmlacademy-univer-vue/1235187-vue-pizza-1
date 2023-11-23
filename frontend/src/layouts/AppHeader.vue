@@ -20,9 +20,9 @@
 </template>
 
 <script>
-  // const getImage = (image) => {
-  // return new URL(../../assets/img/${image}, import.meta.url).href;
-  // };
+// const getImage = (image) => {
+// return new URL(../../assets/img/${image}, import.meta.url).href;
+// };
 </script>
 <style lang="scss" scoped>
 @import "@/assets/scss/app.scss";

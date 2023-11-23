@@ -20,7 +20,7 @@
                   :value="`${light}`"
                   class="visually-hidden"
                   checked
-                />  
+                />
                 <b> {{ item.name }} </b>
                 <span>Из твердых сортов пшеницы</span>
               </label>
@@ -92,6 +92,7 @@
                     <div class="counter counter--orange ingredients__counter">
                       <button
                         type="button"
+                        @click="decrement"
                         class="counter__button counter__button--minus"
                         disabled
                       >
@@ -105,6 +106,7 @@
                       />
                       <button
                         type="button"
+                        @click="increment"
                         class="counter__button counter__button--plus"
                       >
                         <span class="visually-hidden">Больше</span>
@@ -153,7 +155,17 @@ import ingredients from "../mocks/ingredients.json";
 // import misc from "../mocks/misc.json";
 import sauces from "../mocks/sauces.json";
 import sizes from "../mocks/sizes.json";
+import { ref } from "vue";
 
+const count = ref(0);
+
+const decrement = () => {
+    count.value = count.value - 1;
+  };
+  
+  const increment = () => {
+    count.value = count.value + 1;
+  };
 </script>
 
 <style lang="scss" scoped>
@@ -234,7 +246,7 @@ import sizes from "../mocks/sizes.json";
 
 .dough__input {
   position: relative;
-  
+
   margin-right: 8%;
   margin-bottom: 20px;
   padding-left: 50px;
@@ -257,13 +269,12 @@ import sizes from "../mocks/sizes.json";
       background-repeat: no-repeat;
       background-position: center;
       background-size: cover;
-      
     }
   }
 
   span {
     @include l-s11-h13;
-    
+
     display: block;
   }
 
@@ -295,8 +306,6 @@ import sizes from "../mocks/sizes.json";
     }
   }
 }
-
-
 
 // --- для размеров (diameter)
 .content__diameter {
@@ -662,7 +671,7 @@ import sizes from "../mocks/sizes.json";
     width: 100%;
     height: 100%;
 
-    content: '';
+    content: "";
 
     background-image: inherit;
   }
@@ -804,8 +813,6 @@ import sizes from "../mocks/sizes.json";
     background-repeat: no-repeat;
     background-position: center;
     background-size: 80% 80%;
-    
-
   }
 
   &--tomatoes::before {
@@ -868,5 +875,4 @@ import sizes from "../mocks/sizes.json";
     background-image: url("../assets/img/filling/salmon.svg");
   }
 }
-
 </style>

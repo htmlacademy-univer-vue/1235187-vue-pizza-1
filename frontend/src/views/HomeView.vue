@@ -35,13 +35,14 @@
             <div class="sheet__content diameter">
               <label
                 v-for="size in sizes"
-                :key="size.id"
+                
                 :class="`diameter__input diameter__input--${big}`"
               >
                 <input
                   type="radio"
                   name="diameter"
-                  :value="`${big}`"
+                  :key="size"
+                  :value="{big}"
                   class="visually-hidden"
                   checked
                 />
@@ -82,7 +83,6 @@
                 <ul class="ingredients__list">
                   <li
                     v-for="ingredientType in ingredients"
-                    :key="ingredientType.id"
                     class="ingredients__item"
                   >
                     <span :class="`filling filling--${mushrooms}`">
@@ -101,8 +101,9 @@
                       <input
                         type="text"
                         name="counter"
+                        :key="ingredientType"
                         class="counter__input"
-                        v-model.number="count"
+                        :value="count"
                       />
                       <button
                         type="button"

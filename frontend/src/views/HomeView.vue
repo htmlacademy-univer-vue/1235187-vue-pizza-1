@@ -8,6 +8,7 @@
           <div class="sheet">
             <h2 class="title title--small sheet__title">Выберите тесто</h2>
 
+<<<<<<< HEAD
             <div class="sheet__content dough">
               <label
                 v-for="item in dough"
@@ -21,6 +22,11 @@
                   class="visually-hidden"
                   checked
                 />
+=======
+            <div v-for="item in dough" class="sheet__content dough">
+              <label class="`dough__input dough__input--${light}`">
+                <input type="radio" name="dought" value="`${light}`" class="visually-hidden" checked>
+>>>>>>> master
                 <b> {{ item.name }} </b>
                 <span>Из твердых сортов пшеницы</span>
               </label>
@@ -32,6 +38,7 @@
           <div class="sheet">
             <h2 class="title title--small sheet__title">Выберите размер</h2>
 
+<<<<<<< HEAD
             <div class="sheet__content diameter">
               <label
                 v-for="size in sizes"
@@ -46,8 +53,14 @@
                   class="visually-hidden"
                   checked
                 />
+=======
+            <div v-for="size in sizes" class="sheet__content diameter">
+              <label class="`diameter__input diameter__input--${small}`">
+                <input type="radio" name="diameter" value="`${small}`" class="visually-hidden" checked>
+>>>>>>> master
                 <span> {{ size.name }} </span>
               </label>
+
             </div>
           </div>
         </div>
@@ -59,6 +72,7 @@
             </h2>
 
             <div class="sheet__content ingredients">
+<<<<<<< HEAD
               <div class="ingredients__sauce">
                 <p>Основной соус:</p>
 
@@ -73,14 +87,24 @@
                     :value="`${tomato}`"
                     checked
                   />
+=======
+
+              <div v-for="sauce in sauces" class="ingredients__sauce">
+                <p>Основной соус:</p>
+
+                <label class="radio ingredients__input">
+                  <input type="radio" name="sauce" value="`${tomato}`" checked>
+>>>>>>> master
                   <span> {{ sauce.name }} </span>
                 </label>
+ 
               </div>
 
               <div class="ingredients__filling">
                 <p>Начинка:</p>
 
                 <ul class="ingredients__list">
+<<<<<<< HEAD
                   <li
                     v-for="ingredientType in ingredients"
                     class="ingredients__item"
@@ -88,6 +112,10 @@
                     <span :class="`filling filling--${mushrooms}`">
                       {{ ingredientType.name }}
                     </span>
+=======
+                  <li v-for="ingredient in ingredients" class="ingredients__item">
+                    <span class="`filling filling--${mushrooms}`"> {{ingredient.name}} </span>
+>>>>>>> master
 
                     <div class="counter counter--orange ingredients__counter">
                       <button
@@ -98,6 +126,7 @@
                       >
                         <span class="visually-hidden">Меньше</span>
                       </button>
+<<<<<<< HEAD
                       <input
                         type="text"
                         name="counter"
@@ -110,10 +139,18 @@
                         @click="increment"
                         class="counter__button counter__button--plus"
                       >
+=======
+                      <input type="text" name="counter" class="counter__input" value="0">
+                      <button type="button" class="counter__button counter__button--plus">
+>>>>>>> master
                         <span class="visually-hidden">Больше</span>
                       </button>
                     </div>
                   </li>
+<<<<<<< HEAD
+=======
+
+>>>>>>> master
                 </ul>
               </div>
             </div>
@@ -151,6 +188,7 @@
 </template>
 
 <script setup>
+<<<<<<< HEAD
 import dough from "../mocks/dough.json";
 import ingredients from "../mocks/ingredients.json";
 // import misc from "../mocks/misc.json";
@@ -877,3 +915,11 @@ const decrement = () => {
   }
 }
 </style>
+=======
+import dough from '../mocks/dough.json'
+import ingredients from '../mocks/ingredients.json'
+import misc from '../mocks/misc.json'
+import sauces from '../mocks/sauces.json'
+import sizes from '../mocks/sizes.json'
+</script>
+>>>>>>> master

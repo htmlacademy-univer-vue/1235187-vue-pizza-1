@@ -1,18 +1,12 @@
 <template>
   <AppHeader></AppHeader>
-  <AppLayout></AppLayout>
   <HomeView></HomeView>
 </template>
 
 <script setup>
-<<<<<<< HEAD
 //import { AppLayout } from "@/layouts";
 import { HomeView } from "@/views";
 import AppHeader from "./layouts/AppHeader.vue";
-=======
-import { AppLayout } from "@/layouts";
-import { HomeView } from "@/views";
->>>>>>> master
 </script>
 
 <style lang="scss">

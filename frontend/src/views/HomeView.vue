@@ -90,7 +90,41 @@ const pizza = reactive({
   }, {}),
 });
 
+const price = computed(() => {
+  const { dough, size, sauce, ingredients } = pizza;
 
+  const sizeMultiplier =
+    sizeItems.find((item) => item.value === size)?.multiplier ?? 1;
+
+  const doughPrice =
+    doughItems.find((item) => item.value === dough)?.price ?? 0;
+
+  const saucePrice =
+    sauceItems.find((item) => item.value === sauce)?.price ?? 0;
+
+  /*
+   * Здесь мы при помощи метода map превращаем массив ингредиентов
+   * в массив значений, соответствующих итоговой стоимости каждого из них - просто умножив известную цену на количество.
+   * После чего методом reduce вычисляем сумму всех элементов массива, что даст нам общую стоимость всех ингредиентов.
+   */
+  const ingredientsPrice = ingredientItems
+    .map((item) => ingredients[item.value] * item.price)
+    .reduce((acc, item) => acc + item, 0);
+
+  return (doughPrice + saucePrice + ingredientsPrice) * sizeMultiplier;
+});
+
+const disableSubmit = computed(() => {
+  return pizza.name.length === 0 || price.value === 0;
+});
+
+const addIngredient = (ingredient) => {
+  pizza.ingredients[ingredient]++;
+};
+
+const updateIngredientAmount = (ingredient, count) => {
+  pizza.ingredients[ingredient] = count;
+};
 </script>
 
 <style lang="scss">

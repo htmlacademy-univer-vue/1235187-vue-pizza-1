@@ -1,79 +1,27 @@
 <template>
-    <main class="content">
+  <main class="content">
     <form action="#" method="post">
-
       <div class="content__wrapper">
         <h1 class="title title--big">Конструктор пиццы</h1>
 
-        <div class="content__dough">
+        <dough-selector v-model="pizza.dough" :items="doughItems" />
 
-          <div class="sheet">
-            <h2 class="title title--small sheet__title">Выберите тесто</h2>
-
-            <div v-for="item in dough" class="sheet__content dough">
-              <label class="`dough__input dough__input--${light}`">
-                <input type="radio" name="dought" value="`${light}`" class="visually-hidden" checked>
-                <b> {{ item.name }} </b>
-                <span>Из твердых сортов пшеницы</span>
-              </label>
-            </div>
-
-          </div>
-
-        </div>
-
-        <div class="content__diameter">
-          <div class="sheet">
-            <h2 class="title title--small sheet__title">Выберите размер</h2>
-
-            <div v-for="size in sizes" class="sheet__content diameter">
-              <label class="`diameter__input diameter__input--${small}`">
-                <input type="radio" name="diameter" value="`${small}`" class="visually-hidden" checked>
-                <span> {{ size.name }} </span>
-              </label>
-
-            </div>
-          </div>
-        </div>
+        <diameter-selector v-model="pizza.size" :items="sizeItems" />
 
         <div class="content__ingredients">
           <div class="sheet">
-            <h2 class="title title--small sheet__title">Выберите ингредиенты</h2>
+            <h2 class="title title--small sheet__title">
+              Выберите ингредиенты
+            </h2>
 
             <div class="sheet__content ingredients">
+              <sauce-selector v-model="pizza.sauce" :items="sauceItems" />
 
-              <div v-for="sauce in sauces" class="ingredients__sauce">
-                <p>Основной соус:</p>
-
-                <label class="radio ingredients__input">
-                  <input type="radio" name="sauce" value="`${tomato}`" checked>
-                  <span> {{ sauce.name }} </span>
-                </label>
- 
-              </div>
-
-              <div class="ingredients__filling">
-                <p>Начинка:</p>
-
-                <ul class="ingredients__list">
-                  <li v-for="ingredient in ingredients" class="ingredients__item">
-                    <span class="`filling filling--${mushrooms}`"> {{ingredient.name}} </span>
-
-                    <div class="counter counter--orange ingredients__counter">
-                      <button type="button" class="counter__button counter__button--minus" disabled>
-                        <span class="visually-hidden">Меньше</span>
-                      </button>
-                      <input type="text" name="counter" class="counter__input" value="0">
-                      <button type="button" class="counter__button counter__button--plus">
-                        <span class="visually-hidden">Больше</span>
-                      </button>
-                    </div>
-                  </li>
-
-                </ul>
-
-              </div>
-
+              <ingredients-selector
+                :values="pizza.ingredients"
+                :items="ingredientItems"
+                @update="updateIngredientAmount"
+              />
             </div>
           </div>
         </div>
@@ -81,35 +29,385 @@
         <div class="content__pizza">
           <label class="input">
             <span class="visually-hidden">Название пиццы</span>
-            <input type="text" name="pizza_name" placeholder="Введите название пиццы">
+            <input
+              v-model="pizza.name"
+              type="text"
+              name="pizza_name"
+              placeholder="Введите название пиццы"
+            />
           </label>
 
-          <div class="content__constructor">
-            <div class="pizza pizza--foundation--big-tomato">
-              <div class="pizza__wrapper">
-                <div class="pizza__filling pizza__filling--ananas"></div>
-                <div class="pizza__filling pizza__filling--bacon"></div>
-                <div class="pizza__filling pizza__filling--cheddar"></div>
-              </div>
-            </div>
-          </div>
+          <pizza-constructor
+            :dough="pizza.dough"
+            :sauce="pizza.sauce"
+            :ingredients="pizza.ingredients"
+            @drop="addIngredient"
+          />
 
           <div class="content__result">
-            <p>Итого: 0 ₽</p>
-            <button type="button" class="button" disabled>Готовьте!</button>
+            <p>Итого: {{ price }} ₽</p>
+            <button type="button" class="button" :disabled="disableSubmit">
+              Готовьте!
+            </button>
           </div>
         </div>
-
       </div>
-
     </form>
   </main>
 </template>
 
 <script setup>
-import dough from '../mocks/dough.json'
-import ingredients from '../mocks/ingredients.json'
-import misc from '../mocks/misc.json'
-import sauces from '../mocks/sauces.json'
-import sizes from '../mocks/sizes.json'
+import { computed, reactive } from "vue";
+import {
+  normalizeDough,
+  normalizeIngredients,
+  normalizeSauces,
+  normalizeSize,
+} from "@/common/helpers/normalize";
+import doughSelector from "@/modules/constructor/doughSelector.vue";
+import diameterSelector from "@/modules/constructor/diameterSelector.vue";
+import sauceSelector from "@/modules/constructor/sauceSelector.vue";
+import ingredientsSelector from "@/modules/constructor/ingredientsSelector.vue";
+import pizzaConstructor from "@/modules/constructor/pizzaConstructor.vue";
+import doughJSON from "@/mocks/dough.json";
+import ingredientsJSON from "@/mocks/ingredients.json";
+import saucesJSON from "@/mocks/sauces.json";
+import sizesJSON from "@/mocks/sizes.json";
+
+const doughItems = doughJSON.map(normalizeDough);
+const ingredientItems = ingredientsJSON.map(normalizeIngredients);
+const sauceItems = saucesJSON.map(normalizeSauces);
+const sizeItems = sizesJSON.map(normalizeSize);
+
+const pizza = reactive({
+  name: "",
+  dough: doughItems[0].value,
+  size: sizeItems[0].value,
+  sauce: sauceItems[0].value,
+  ingredients: ingredientItems.reduce((acc, item) => {
+    acc[item.value] = 0;
+    return acc;
+  }, {}),
+});
+
+
 </script>
+
+<style lang="scss">
+@import "@/assets/scss/ds-system/ds.scss";
+@import "@/assets/scss/mixins/mixins.scss";
+
+.content {
+  padding-top: 20px;
+}
+
+.content__wrapper {
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+
+  width: 920px;
+  margin: 0 auto;
+  padding-right: 2.12%;
+  padding-bottom: 30px;
+  padding-left: 2.12%;
+}
+
+.content__ingredients {
+  width: 527px;
+  margin-top: 15px;
+  margin-right: auto;
+  margin-bottom: 15px;
+}
+
+.content__pizza {
+  width: 373px;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+.content__result {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-top: 25px;
+
+  p {
+    @include b-s24-h28;
+
+    margin: 0;
+  }
+
+  button {
+    margin-left: 12px;
+    padding: 16px 45px;
+  }
+}
+
+.sheet {
+  padding-top: 15px;
+
+  border-radius: 8px;
+  background-color: $white;
+  box-shadow: $shadow-light;
+}
+
+.sheet__title {
+  padding-right: 18px;
+  padding-left: 18px;
+}
+
+.sheet__content {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+
+  margin-top: 8px;
+  padding-top: 18px;
+  padding-right: 18px;
+  padding-left: 18px;
+
+  border-top: 1px solid rgba($green-500, 0.1);
+}
+
+.title {
+  box-sizing: border-box;
+  width: 100%;
+  margin: 0;
+
+  color: $black;
+
+  &--big {
+    @include b-s36-h42;
+  }
+
+  &--small {
+    @include b-s18-h21;
+  }
+}
+
+.radio {
+  cursor: pointer;
+
+  span {
+    @include r-s16-h19;
+
+    position: relative;
+
+    padding-left: 28px;
+
+    &:before {
+      @include p_center-v;
+
+      display: block;
+
+      box-sizing: border-box;
+      width: 20px;
+      height: 20px;
+
+      content: "";
+      transition: 0.3s;
+
+      border: 1px solid $purple-400;
+      border-radius: 50%;
+      background-color: $white;
+    }
+  }
+
+  &:hover {
+    input:not(:checked):not(:disabled) + span {
+      &:before {
+        border-color: $purple-800;
+      }
+    }
+  }
+
+  input {
+    display: none;
+
+    &:checked + span {
+      &:before {
+        border: 6px solid $green-500;
+      }
+    }
+
+    &:disabled {
+      & + span {
+        &:before {
+          border-color: $purple-400;
+          background-color: $silver-200;
+        }
+      }
+
+      &:checked + span {
+        &:before {
+          border: 6px solid $purple-400;
+        }
+      }
+    }
+  }
+}
+
+.button {
+  $bl: &;
+
+  @include b-s18-h21;
+  font-family: inherit;
+  display: block;
+
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+
+  cursor: pointer;
+  transition: 0.3s;
+  text-align: center;
+
+  color: $white;
+  border: none;
+  border-radius: 8px;
+  outline: none;
+  box-shadow: $shadow-medium;
+
+  background-color: $green-500;
+
+  &:hover:not(:active):not(:disabled) {
+    background-color: $green-400;
+  }
+
+  &:active:not(:disabled) {
+    background-color: $green-600;
+  }
+
+  &:focus:not(:disabled) {
+    opacity: 0.5;
+  }
+
+  &:disabled {
+    background-color: $green-300;
+    color: rgba($white, 0.2);
+    cursor: default;
+  }
+
+  &--border {
+    background-color: transparent;
+    border: 1px solid $green-500;
+    color: $black;
+    box-shadow: none;
+
+    &:hover:not(:active):not(:disabled) {
+      color: $green-500;
+      border-color: $green-500;
+      background-color: transparent;
+    }
+
+    &:active:not(:disabled) {
+      color: $green-600;
+      border-color: $green-600;
+      background-color: transparent;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+    }
+  }
+
+  &--transparent {
+    @include b-s14-h16;
+    background-color: transparent;
+    box-shadow: none;
+    color: $black;
+
+    &:hover:not(:active):not(:disabled) {
+      color: $red-800;
+      background-color: transparent;
+    }
+
+    &:active:not(:disabled) {
+      color: $red-900;
+      background-color: transparent;
+    }
+
+    &:disabled {
+      opacity: 0.25;
+    }
+  }
+
+  &--arrow {
+    &::before {
+      content: "";
+      background-image: url("@/assets/img/button-arrow.svg");
+      background-position: center;
+      background-repeat: no-repeat;
+      margin-right: 16px;
+      width: 18px;
+      height: 18px;
+      display: inline-block;
+      vertical-align: middle;
+      transform: translateY(-1px);
+    }
+  }
+
+  &--white {
+    background-color: $white;
+    color: $green-500;
+  }
+}
+
+.input {
+  display: block;
+
+  span {
+    @include r-s14-h16;
+
+    display: block;
+
+    margin-bottom: 4px;
+  }
+
+  input {
+    @include r-s16-h19;
+
+    display: block;
+
+    box-sizing: border-box;
+    width: 100%;
+    margin: 0;
+    padding: 8px 16px;
+
+    transition: 0.3s;
+
+    color: $black;
+    border: 1px solid $purple-400;
+    border-radius: 8px;
+    outline: none;
+    background-color: $white;
+
+    font-family: inherit;
+
+    &:focus {
+      border-color: $green-500;
+    }
+  }
+
+  &:hover {
+    input {
+      border-color: $black;
+    }
+  }
+
+  &--big-label {
+    display: flex;
+    align-items: center;
+
+    span {
+      @include b-s16-h19;
+
+      margin-right: 16px;
+
+      white-space: nowrap;
+    }
+  }
+}
+</style>

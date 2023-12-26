@@ -10,19 +10,21 @@
 
             <div class="sheet__content dough">
               <label
-                v-for="item in dough"
-                :key="item.id"
-                :class="`dough__input dough__input--${light}`"
+                v-for="doughType in doughItems"
+                :key="doughType.id"
+                class="dough__input"
               >
                 <input
                   type="radio"
-                  name="dought"
-                  :value="`${light}`"
+                  name="dough"
+                  :value="doughType.value"
                   class="visually-hidden"
                   checked
                 />
-                <b> {{ item.name }} </b>
-                <span>Из твердых сортов пшеницы</span>
+                <img :src="getImage(doughType.image)" :alt="doughType.name" />
+
+                <b>{{ doughType.name }}</b>
+                <span>{{ doughType.description }}</span>
               </label>
             </div>
           </div>
@@ -34,21 +36,19 @@
 
             <div class="sheet__content diameter">
               <label
-                v-for="size in sizes"
-                
-                :class="`diameter__input diameter__input--${big}`"
+                v-for="sizeType in sizeItems"
+                :key="sizeType.id"
+                class="diameter__input"
+                :class="`diameter__input--${sizeType.value}`"
               >
                 <input
                   type="radio"
                   name="diameter"
-                  :key="size"
-                  :value="{big}"
+                  :value="sizeType.value"
                   class="visually-hidden"
-                  checked
                 />
-                <span> {{ size.name }} </span>
+                <span>{{ sizeType.name }}</span>
               </label>
-
             </div>
           </div>
         </div>
@@ -64,19 +64,13 @@
                 <p>Основной соус:</p>
 
                 <label
-                  v-for="sauce in sauces"
-                  :key="sauce.id"
+                  v-for="sauceType in sauceItems"
+                  :key="sauceType.id"
                   class="radio ingredients__input"
                 >
-                  <input
-                    type="radio"
-                    name="sauce"
-                    :value="`${tomato}`"
-                    checked
-                  />
-                  <span> {{ sauce.name }} </span>
+                  <input type="radio" name="sauce" :value="sauceType.value" />
+                  <span>{{ sauceType.name }}</span>
                 </label>
- 
               </div>
 
               <div class="ingredients__filling">
@@ -84,17 +78,21 @@
 
                 <ul class="ingredients__list">
                   <li
-                    v-for="ingredientType in ingredients"
+                    v-for="ingredientType in ingredientItems"
+                    :key="ingredientType.id"
                     class="ingredients__item"
                   >
-                    <span :class="`filling filling--${mushrooms}`">
+                    <div class="filling">
+                      <img
+                        :src="getImage(ingredientType.image)"
+                        :alt="ingredientType.name"
+                      />
                       {{ ingredientType.name }}
-                    </span>
+                    </div>
 
                     <div class="counter counter--orange ingredients__counter">
                       <button
                         type="button"
-                        @click="decrement"
                         class="counter__button counter__button--minus"
                         disabled
                       >
@@ -103,13 +101,11 @@
                       <input
                         type="text"
                         name="counter"
-                        :key="ingredientType"
                         class="counter__input"
-                        :value="count"
+                        value="0"
                       />
                       <button
                         type="button"
-                        @click="increment"
                         class="counter__button counter__button--plus"
                       >
                         <span class="visually-hidden">Больше</span>
@@ -153,30 +149,32 @@
 </template>
 
 <script setup>
-import dough from "../mocks/dough.json";
-import ingredients from "../mocks/ingredients.json";
-// import misc from "../mocks/misc.json";
-import sauces from "../mocks/sauces.json";
-import sizes from "../mocks/sizes.json";
-import { ref } from "vue";
+import doughJSON from "@/mocks/dough.json";
+import ingredientsJSON from "@/mocks/ingredients.json";
+import saucesJSON from "@/mocks/sauces.json";
+import sizesJSON from "@/mocks/sizes.json";
+import {
+  normalizeDough,
+  normalizeIngredients,
+  normalizeSauces,
+  normalizeSize,
+} from "@/common/helpers/normalize";
 
-const count = ref(0);
+const doughItems = doughJSON.map(normalizeDough);
+const ingredientItems = ingredientsJSON.map(normalizeIngredients);
+const sauceItems = saucesJSON.map(normalizeSauces);
+const sizeItems = sizesJSON.map(normalizeSize);
 
-const decrement = () => {
-    count.value = count.value - 1;
-  };
-  
-  const increment = () => {
-    count.value = count.value + 1;
-  };
+const getImage = (image) => {
+return new URL(`../../assets/img/${image}`, import.meta.url).href;
+};
+
 </script>
 
-<style lang="scss" scoped>
-@import "@/assets/scss/app.scss";
-.container {
-  width: 770px;
-  margin: 0 auto;
-}
+<style lang="scss">
+@import "@/assets/scss/ds-system/ds.scss";
+@import "@/assets/scss/mixins/mixins.scss";
+
 .content {
   padding-top: 20px;
 }
@@ -245,157 +243,84 @@ const decrement = () => {
   }
 }
 
-// --- для теста (dough) ---
+.sheet {
+  padding-top: 15px;
 
-.dough__input {
-  position: relative;
+  border-radius: 8px;
+  background-color: $white;
+  box-shadow: $shadow-light;
+}
 
-  margin-right: 8%;
-  margin-bottom: 20px;
-  padding-left: 50px;
+.sheet__title {
+  padding-right: 18px;
+  padding-left: 18px;
+}
 
-  cursor: pointer;
+.sheet__content {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
 
-  b {
+  margin-top: 8px;
+  padding-top: 18px;
+  padding-right: 18px;
+  padding-left: 18px;
+
+  border-top: 1px solid rgba($green-500, 0.1);
+}
+
+.ingredients__sauce {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+
+  width: 100%;
+  margin-bottom: 14px;
+
+  p {
     @include r-s16-h19;
 
-    &::before {
-      @include p_center-v;
-
-      width: 36px;
-      height: 36px;
-
-      content: "";
-      transition: 0.3s;
-
-      border-radius: 50%;
-      background-repeat: no-repeat;
-      background-position: center;
-      background-size: cover;
-    }
-  }
-
-  span {
-    @include l-s11-h13;
-
-    display: block;
-  }
-
-  &--light {
-    b {
-      &::before {
-        background-image: url("../assets/img/dough-light.svg");
-      }
-    }
-  }
-
-  &--large {
-    b {
-      &::before {
-        background-image: url("../assets/img/dough-large.svg");
-      }
-    }
-  }
-
-  &:hover {
-    b::before {
-      box-shadow: $shadow-regular;
-    }
-  }
-
-  input {
-    &:checked + b::before {
-      box-shadow: $shadow-large;
-    }
+    margin-top: 0;
+    margin-right: 16px;
+    margin-bottom: 10px;
   }
 }
 
-// --- для размеров (diameter)
-.content__diameter {
-  width: 373px;
-  margin-top: 15px;
-  margin-bottom: 15px;
-}
-
-.diameter__input {
-  margin-right: 8.7%;
-  margin-bottom: 20px;
-  padding-top: 7px;
-  padding-bottom: 6px;
-  cursor: pointer;
-
-  span {
-    @include r-s16-h19;
-    position: relative;
-    padding-left: 46px;
-    &::before {
-      @include p_center_v;
-      width: 36px;
-      height: 36px;
-      content: "";
-      transition: 0.3s;
-      border-radius: 50%;
-      background-color: $green-100;
-      background-image: url("@/assets/img/diameter.svg");
-      background-repeat: no-repeat;
-      background-position: center;
-    }
-  }
-
-  &:nth-child(3n) {
-    margin-right: 0;
-  }
-
-  &--small {
-    span::before {
-      background-size: 18px;
-    }
-  }
-
-  &--normal {
-    span::before {
-      background-size: 29px;
-    }
-  }
-
-  &--big {
-    span::before {
-      background-size: 100%;
-    }
-  }
-
-  &:hover {
-    span::before {
-      box-shadow: $shadow-regular;
-    }
-  }
-
-  input {
-    &:checked + span::before {
-      box-shadow: $shadow-large;
-    }
-  }
-}
-
-// --- для ингредиентов (ingredients ) ---
-.content__ingredients {
-  width: 527px;
-  margin-top: 15px;
-  margin-right: auto;
-  margin-bottom: 15px;
+.ingredients__input {
+  margin-right: 24px;
+  margin-bottom: 10px;
 }
 
 .ingredients__filling {
   width: 100%;
+
   p {
     @include r-s16-h19;
+
     margin-top: 0;
     margin-bottom: 16px;
   }
 }
 
+.title {
+  box-sizing: border-box;
+  width: 100%;
+  margin: 0;
+
+  color: $black;
+
+  &--big {
+    @include b-s36-h42;
+  }
+
+  &--small {
+    @include b-s18-h21;
+  }
+}
+
 .ingredients__list {
   @include clear-list;
+
   display: flex;
   align-items: flex-start;
   flex-wrap: wrap;
@@ -414,9 +339,71 @@ const decrement = () => {
   margin-left: 36px;
 }
 
-// --- для cчетчика (counter) ---
+.radio {
+  cursor: pointer;
+
+  span {
+    @include r-s16-h19;
+
+    position: relative;
+
+    padding-left: 28px;
+
+    &:before {
+      @include p_center-v;
+
+      display: block;
+
+      box-sizing: border-box;
+      width: 20px;
+      height: 20px;
+
+      content: "";
+      transition: 0.3s;
+
+      border: 1px solid $purple-400;
+      border-radius: 50%;
+      background-color: $white;
+    }
+  }
+
+  &:hover {
+    input:not(:checked):not(:disabled) + span {
+      &:before {
+        border-color: $purple-800;
+      }
+    }
+  }
+
+  input {
+    display: none;
+
+    &:checked + span {
+      &:before {
+        border: 6px solid $green-500;
+      }
+    }
+
+    &:disabled {
+      & + span {
+        &:before {
+          border-color: $purple-400;
+          background-color: $silver-200;
+        }
+      }
+
+      &:checked + span {
+        &:before {
+          border: 6px solid $purple-400;
+        }
+      }
+    }
+  }
+}
+
 .counter {
   display: flex;
+
   justify-content: space-between;
   align-items: center;
 }
@@ -557,62 +544,246 @@ const decrement = () => {
     box-shadow: inset $shadow-regular;
   }
 }
-// для соуса
-.ingredients__sauce {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
 
-  width: 100%;
-  margin-bottom: 14px;
+.dough__input {
+  position: relative;
 
-  p {
+  margin-right: 8%;
+  margin-bottom: 20px;
+  padding-left: 50px;
+
+  cursor: pointer;
+
+  img {
+    @include p_center-v;
+
+    width: 36px;
+    height: 36px;
+
+    transition: 0.3s;
+
+    border-radius: 50%;
+  }
+
+  b {
     @include r-s16-h19;
+  }
 
-    margin-top: 0;
-    margin-right: 16px;
-    margin-bottom: 10px;
+  span {
+    @include l-s11-h13;
+
+    display: block;
+  }
+
+  &:hover {
+    img {
+      box-shadow: $shadow-regular;
+    }
+  }
+
+  input {
+    &:checked + img {
+      box-shadow: $shadow-large;
+    }
   }
 }
 
-.ingredients__input {
-  margin-right: 24px;
-  margin-bottom: 10px;
-}
+.diameter__input {
+  margin-right: 8.7%;
+  margin-bottom: 20px;
+  padding-top: 7px;
+  padding-bottom: 6px;
 
-.ingredients__filling {
-  width: 100%;
+  cursor: pointer;
 
-  p {
+  span {
     @include r-s16-h19;
 
-    margin-top: 0;
-    margin-bottom: 16px;
+    position: relative;
+
+    padding-left: 46px;
+
+    &::before {
+      @include p_center_v;
+
+      width: 36px;
+      height: 36px;
+
+      content: "";
+      transition: 0.3s;
+
+      border-radius: 50%;
+      background-color: $green-100;
+      background-image: url("@/assets/img/diameter.svg");
+      background-repeat: no-repeat;
+      background-position: center;
+    }
+  }
+
+  &:nth-child(3n) {
+    margin-right: 0;
+  }
+
+  &--small {
+    span::before {
+      background-size: 18px;
+    }
+  }
+
+  &--normal {
+    span::before {
+      background-size: 29px;
+    }
+  }
+
+  &--big {
+    span::before {
+      background-size: 100%;
+    }
+  }
+
+  &:hover {
+    span::before {
+      box-shadow: $shadow-regular;
+    }
+  }
+
+  input {
+    &:checked + span::before {
+      box-shadow: $shadow-large;
+    }
   }
 }
 
-.ingredients__list {
-  @include clear-list;
+.filling {
+  @include r-s14-h16;
 
-  display: flex;
-  align-items: flex-start;
-  flex-wrap: wrap;
+  position: relative;
+
+  display: block;
+
+  padding-left: 36px;
+
+  img {
+    @include p_center-v;
+
+    display: block;
+
+    width: 32px;
+    height: 32px;
+
+    box-sizing: border-box;
+    padding: 4px;
+
+    border-radius: 50%;
+  }
 }
 
-.ingredients__item {
-  width: 100px;
-  min-height: 40px;
-  margin-right: 17px;
-  margin-bottom: 35px;
-}
+.button {
+  $bl: &;
 
-.ingredients__counter {
-  width: 54px;
-  margin-top: 10px;
-  margin-left: 36px;
-}
+  @include b-s18-h21;
+  font-family: inherit;
+  display: block;
 
-//для пиццы
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+
+  cursor: pointer;
+  transition: 0.3s;
+  text-align: center;
+
+  color: $white;
+  border: none;
+  border-radius: 8px;
+  outline: none;
+  box-shadow: $shadow-medium;
+
+  background-color: $green-500;
+
+  &:hover:not(:active):not(:disabled) {
+    background-color: $green-400;
+  }
+
+  &:active:not(:disabled) {
+    background-color: $green-600;
+  }
+
+  &:focus:not(:disabled) {
+    opacity: 0.5;
+  }
+
+  &:disabled {
+    background-color: $green-300;
+    color: rgba($white, 0.2);
+    cursor: default;
+  }
+
+  &--border {
+    background-color: transparent;
+    border: 1px solid $green-500;
+    color: $black;
+    box-shadow: none;
+
+    &:hover:not(:active):not(:disabled) {
+      color: $green-500;
+      border-color: $green-500;
+      background-color: transparent;
+    }
+
+    &:active:not(:disabled) {
+      color: $green-600;
+      border-color: $green-600;
+      background-color: transparent;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+    }
+  }
+
+  &--transparent {
+    @include b-s14-h16;
+    background-color: transparent;
+    box-shadow: none;
+    color: $black;
+
+    &:hover:not(:active):not(:disabled) {
+      color: $red-800;
+      background-color: transparent;
+    }
+
+    &:active:not(:disabled) {
+      color: $red-900;
+      background-color: transparent;
+    }
+
+    &:disabled {
+      opacity: 0.25;
+    }
+  }
+
+  &--arrow {
+    &::before {
+      content: "";
+      background-image: url("@/assets/img/button-arrow.svg");
+      background-position: center;
+      background-repeat: no-repeat;
+      margin-right: 16px;
+      width: 18px;
+      height: 18px;
+      display: inline-block;
+      vertical-align: middle;
+      transform: translateY(-1px);
+    }
+  }
+
+  &--white {
+    background-color: $white;
+    color: $green-500;
+  }
+}
 
 .pizza {
   position: relative;
@@ -627,19 +798,19 @@ const decrement = () => {
   background-size: 100%;
 
   &--foundation--big-creamy {
-    background-image: url("../assets/img/foundation/big-creamy.svg");
+    background-image: url("@/assets/img/foundation/big-creamy.svg");
   }
 
   &--foundation--big-tomato {
-    background-image: url("../assets/img/foundation/big-tomato.svg");
+    background-image: url("@/assets/img/foundation/big-tomato.svg");
   }
 
   &--foundation--small-creamy {
-    background-image: url("../assets/img/foundation/small-creamy.svg");
+    background-image: url("@/assets/img/foundation/small-creamy.svg");
   }
 
   &--foundation--small-tomato {
-    background-image: url("../assets/img/foundation/small-tomato.svg");
+    background-image: url("@/assets/img/foundation/small-tomato.svg");
   }
 }
 
@@ -704,178 +875,147 @@ const decrement = () => {
   &--ananas,
   &--ananas.pizza__filling--second::before,
   &--ananas.pizza__filling--third::after {
-    background-image: url("../img/filling/ananas.svg");
+    background-image: url("@/assets/img/filling-big/ananas.svg");
   }
 
   &--bacon,
   &--bacon.pizza__filling--second::before,
   &--bacon.pizza__filling--third::after {
-    background-image: url("../img/filling-big/bacon.svg");
+    background-image: url("@/assets/img/filling-big/bacon.svg");
   }
 
   &--blue_cheese,
   &--blue.pizza__filling--second::before,
   &--blue.pizza__filling--third::after {
-    background-image: url("../img/filling-big/blue_cheese.svg");
+    background-image: url("@/assets/img/filling-big/blue_cheese.svg");
   }
 
   &--cheddar,
   &--cheddar.pizza__filling--second::before,
   &--cheddar.pizza__filling--third::after {
-    background-image: url("../img/filling-big/cheddar.svg");
+    background-image: url("@/assets/img/filling-big/cheddar.svg");
   }
 
   &--chile,
   &--chile.pizza__filling--second::before,
   &--chile.pizza__filling--third::after {
-    background-image: url("../img/filling-big/chile.svg");
+    background-image: url("@/assets/img/filling-big/chile.svg");
   }
 
   &--ham,
   &--ham.pizza__filling--second::before,
   &--ham.pizza__filling--third::after {
-    background-image: url("../img/filling-big/ham.svg");
+    background-image: url("@/assets/img/filling-big/ham.svg");
   }
 
   &--jalapeno,
   &--jalapeno.pizza__filling--second::before,
   &--jalapeno.pizza__filling--third::after {
-    background-image: url("../img/filling-big/jalapeno.svg");
+    background-image: url("@/assets/img/filling-big/jalapeno.svg");
   }
 
   &--mozzarella,
   &--mozzarella.pizza__filling--second::before,
   &--mozzarella.pizza__filling--third::after {
-    background-image: url("../img/filling-big/mozzarella.svg");
+    background-image: url("@/assets/img/filling-big/mozzarella.svg");
   }
 
   &--mushrooms,
   &--mushrooms.pizza__filling--second::before,
   &--mushrooms.pizza__filling--third::after {
-    background-image: url("../img/filling-big/mushrooms.svg");
+    background-image: url("@/assets/img/filling-big/mushrooms.svg");
   }
 
   &--olives,
   &--olives.pizza__filling--second::before,
   &--olives.pizza__filling--third::after {
-    background-image: url("../img/filling-big/olives.svg");
+    background-image: url("@/assets/img/filling-big/olives.svg");
   }
 
   &--onion,
   &--onion.pizza__filling--second::before,
   &--onion.pizza__filling--third::after {
-    background-image: url("../img/filling-big/onion.svg");
+    background-image: url("@/assets/img/filling-big/onion.svg");
   }
 
   &--parmesan,
   &--parmesan.pizza__filling--second::before,
   &--parmesan.pizza__filling--third::after {
-    background-image: url("../img/filling-big/parmesan.svg");
+    background-image: url("@/assets/img/filling-big/parmesan.svg");
   }
 
   &--salami,
   &---salami.pizza__filling--second::before,
   &---salami.pizza__filling--third::after {
-    background-image: url("../img/filling-big/salami.svg");
+    background-image: url("@/assets/img/filling-big/salami.svg");
   }
 
   &--salmon,
   &--salmon.pizza__filling--second::before,
   &--salmon.pizza__filling--third::after {
-    background-image: url("../img/filling-big/salmon.svg");
+    background-image: url("@/assets/img/filling-big/salmon.svg");
   }
 
   &--tomatoes,
   &--tomatoes.pizza__filling--second::before,
   &--tomatoes.pizza__filling--third::after {
-    background-image: url("../img/filling-big/tomatoes.svg");
+    background-image: url("@/assets/img/filling-big/tomatoes.svg");
   }
 }
-//начинка
-.filling {
-  @include r-s14-h16;
 
-  position: relative;
-
+.input {
   display: block;
 
-  padding-left: 36px;
-
-  &::before {
-    @include p_center-v;
+  span {
+    @include r-s14-h16;
 
     display: block;
 
-    width: 32px;
-    height: 32px;
+    margin-bottom: 4px;
+  }
 
-    content: "";
+  input {
+    @include r-s16-h19;
 
-    border-radius: 50%;
+    display: block;
+
+    box-sizing: border-box;
+    width: 100%;
+    margin: 0;
+    padding: 8px 16px;
+
+    transition: 0.3s;
+
+    color: $black;
+    border: 1px solid $purple-400;
+    border-radius: 8px;
+    outline: none;
     background-color: $white;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: 80% 80%;
+
+    font-family: inherit;
+
+    &:focus {
+      border-color: $green-500;
+    }
   }
 
-  &--tomatoes::before {
-    background-image: url("../assets/img/filling/tomatoes.svg");
+  &:hover {
+    input {
+      border-color: $black;
+    }
   }
 
-  &--ananas::before {
-    background-image: url("../assets/img/filling/ananas.svg");
-  }
+  &--big-label {
+    display: flex;
+    align-items: center;
 
-  &--bacon::before {
-    background-image: url("../assets/img/filling/bacon.svg");
-  }
+    span {
+      @include b-s16-h19;
 
-  &--blue_cheese::before {
-    background-image: url("../assets/img/filling/blue_cheese.svg");
-  }
+      margin-right: 16px;
 
-  &--cheddar::before {
-    background-image: url("../assets/img/filling/cheddar.svg");
-  }
-
-  &--chile::before {
-    background-image: url("../assets/img/filling/chile.svg");
-  }
-
-  &--ham::before {
-    background-image: url("../assets/img/filling/ham.svg");
-  }
-
-  &--jalapeno::before {
-    background-image: url("../assets/img/filling/jalapeno.svg");
-  }
-
-  &--mozzarella::before {
-    background-image: url("../assets/img/filling/mozzarella.svg");
-  }
-
-  &--mushrooms::before {
-    background-image: url("../assets/img/filling/mushrooms.svg");
-  }
-
-  &--olives::before {
-    background-image: url("../assets/img/filling/olives.svg");
-  }
-
-  &--onion::before {
-    background-image: url("../assets/img/filling/onion.svg");
-  }
-
-  &--parmesan::before {
-    background-image: url("../assets/img/filling/parmesan.svg");
-  }
-
-  &--salami::before {
-    background-image: url("../assets/img/filling/salami.svg");
-  }
-
-  &--salmon::before {
-    background-image: url("../assets/img/filling/salmon.svg");
+      white-space: nowrap;
+    }
   }
 }
 </style>

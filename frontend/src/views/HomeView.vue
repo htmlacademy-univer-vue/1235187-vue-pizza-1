@@ -64,11 +64,11 @@ import {
   normalizeSauces,
   normalizeSize,
 } from "@/common/helpers/normalize";
-import doughSelector from "@/modules/constructor/doughSelector.vue";
-import diameterSelector from "@/modules/constructor/diameterSelector.vue";
-import sauceSelector from "@/modules/constructor/sauceSelector.vue";
-import ingredientsSelector from "@/modules/constructor/ingredientsSelector.vue";
-import pizzaConstructor from "@/modules/constructor/pizzaConstructor.vue";
+import DoughSelector from "@/modules/constructor/DoughSelector.vue";
+import DiameterSelector from "@/modules/constructor/DiameterSelector.vue";
+import SauceSelector from "@/modules/constructor/SauceSelector.vue";
+import IngredientsSelector from "@/modules/constructor/IngredientsSelector.vue";
+import PizzaConstructor from "@/modules/constructor/PizzaConstructor.vue";
 import doughJSON from "@/mocks/dough.json";
 import ingredientsJSON from "@/mocks/ingredients.json";
 import saucesJSON from "@/mocks/sauces.json";
@@ -102,7 +102,7 @@ const price = computed(() => {
   const saucePrice =
     sauceItems.find((item) => item.value === sauce)?.price ?? 0;
 
- 
+
   const ingredientsPrice = ingredientItems
     .map((item) => ingredients[item.value] * item.price)
     .reduce((acc, item) => acc + item, 0);

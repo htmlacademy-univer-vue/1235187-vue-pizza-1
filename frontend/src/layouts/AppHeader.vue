@@ -1,20 +1,20 @@
 <template>
     <header class="header">
       <div class="header__logo">
-        <router-link :to="{ name: 'home' }" class="logo">
+        <a href="/" class="logo">
           <img
             src="@/assets/img/logo.svg"
             alt="V!U!E! Pizza logo"
             width="90"
             height="40"
           />
-        </router-link>
+        </a>
       </div>
       <div class="header__cart">
-        <router-link :to="{ name: 'cart' }">0 ₽</router-link>
+        <a href="/">0 ₽</a>
       </div>
       <div class="header__user">
-        <router-link :to="{ name: 'profile' }">
+        <a href="/">
           <picture>
             <source
               type="image/webp"
@@ -32,10 +32,10 @@
             />
           </picture>
           <span>Василий Ложкин</span>
-        </router-link>
-        <router-link :to="{ name: 'home' }" class="header__logout">
+        </a>
+        <a href="/" class="header__logout">
           <span>Выйти</span>
-        </router-link>
+        </a>
       </div>
     </header>
   </template>

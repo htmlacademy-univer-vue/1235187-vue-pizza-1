@@ -90,7 +90,37 @@ const pizza = reactive({
   }, {}),
 });
 
+const price = computed(() => {
+  const { dough, size, sauce, ingredients } = pizza;
 
+  const sizeMultiplier =
+    sizeItems.find((item) => item.value === size)?.multiplier ?? 1;
+
+  const doughPrice =
+    doughItems.find((item) => item.value === dough)?.price ?? 0;
+
+  const saucePrice =
+    sauceItems.find((item) => item.value === sauce)?.price ?? 0;
+
+
+  const ingredientsPrice = ingredientItems
+    .map((item) => ingredients[item.value] * item.price)
+    .reduce((acc, item) => acc + item, 0);
+
+  return (doughPrice + saucePrice + ingredientsPrice) * sizeMultiplier;
+});
+
+const disableSubmit = computed(() => {
+  return pizza.name.length === 0 || price.value === 0;
+});
+
+const addIngredient = (ingredient) => {
+  pizza.ingredients[ingredient]++;
+};
+
+const updateIngredientAmount = (ingredient, count) => {
+  pizza.ingredients[ingredient] = count;
+};
 </script>
 
 <style lang="scss">

@@ -102,7 +102,6 @@ const price = computed(() => {
   const saucePrice =
     sauceItems.find((item) => item.value === sauce)?.price ?? 0;
 
-
   const ingredientsPrice = ingredientItems
     .map((item) => ingredients[item.value] * item.price)
     .reduce((acc, item) => acc + item, 0);

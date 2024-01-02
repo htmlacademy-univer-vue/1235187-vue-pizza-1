@@ -1,7 +1,16 @@
-import { defineStore } from "pinia";
+import { defineStore } from 'pinia'
 
-export const useProfileStore = defineStore("profile", {
-  state: () => ({}),
-  getters: {},
-  actions: {},
-});
+export const useProfileStore = defineStore('profile', {
+	state: () => ({
+		profile: {
+			id: "",
+			name: "",
+			email: "",
+			avatar: "",
+			phone: "",
+			addresses:[]
+		},
+	}),
+	getters: {},
+	actions: {},
+})

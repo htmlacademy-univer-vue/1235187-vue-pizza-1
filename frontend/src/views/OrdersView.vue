@@ -224,7 +224,8 @@ const getImage = (image) => {
 </script>
 
 <style lang="scss" scoped>
-@import "@/assets/scss/app.scss";
+@import "@/assets/scss/ds-system/ds.scss";
+@import "@/assets/scss/mixins/mixins.scss";
 
 .order {
   margin-bottom: 32px;
@@ -332,5 +333,26 @@ const getImage = (image) => {
   padding: 16px 10px;
 
   border-top: 1px solid rgba($green-500, 0.1);
+}
+
+.product {
+  display: flex;
+  align-items: center;
+}
+
+.product__text {
+  margin-left: 15px;
+
+  h2 {
+    @include b-s18-h21;
+
+    margin-top: 0;
+    margin-bottom: 10px;
+  }
+
+  ul {
+    @include clear-list;
+    @include l-s11-h13;
+  }
 }
 </style>

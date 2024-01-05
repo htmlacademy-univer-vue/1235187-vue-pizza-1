@@ -3,7 +3,7 @@
     <div class="layout__sidebar sidebar">
       <router-link :to="{ name: 'home' }" class="logo layout__logo">
         <img
-          :src="getPublicImage('/public/img/logo.svg')"
+          src="@/assets/img/logo.svg"
           alt="V!U!E! Pizza logo"
           width="90"
           height="40"
@@ -18,10 +18,6 @@
     </div>
   </main>
 </template>
-
-<script setup>
-import { getPublicImage } from "@/common/helpers/public-image";
-</script>
 
 <style lang="scss">
 @import "@/assets/scss/ds-system/ds.scss";

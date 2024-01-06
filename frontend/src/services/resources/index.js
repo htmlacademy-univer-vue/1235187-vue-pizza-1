@@ -7,7 +7,6 @@ import { SauceResource } from "@/services/resources/sauce.resource";
 import { SizeResource } from "@/services/resources/size.resource";
 import { AuthResource } from "@/services/resources/auth.resource";
 
-
 export default {
   address: new AddressResource(),
   dough: new DoughResource(),

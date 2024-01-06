@@ -88,7 +88,6 @@ export const usePizzaStore = defineStore("pizza", {
         (item) => item.ingredientId === ingredientId
       );
 
-     
       if (ingredientIdx === -1 && count > 0) {
         this.addIngredient(ingredientId);
         return;

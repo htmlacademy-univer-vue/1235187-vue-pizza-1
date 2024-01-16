@@ -18,6 +18,12 @@ export const routes = [
     meta: { layout: "DefaultLayout" },
   },
   {
+    path: "/succsess",
+    name: "succsess",
+    component: () => import("@/views/SuccessView.vue"),
+    meta: { layout: "SimpleLayout" },
+  },
+  {
     path: "/user",
     name: "user",
     component: () => import("@/views/UserView.vue"),
